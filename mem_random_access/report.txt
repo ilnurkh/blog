@@ -1,0 +1,34 @@
+
+finalSize=1 mb
+elemsnum=0.021846 mln
+48: Elapsed q50: 12.945k ticks
+48: Elapsed q90: 19.545k ticks
+finalSize=1 mb
+elemsnum=0.016385 mln
+64: Elapsed q50: 13.996k ticks
+64: Elapsed q90: 18.309k ticks
+finalSize=1 mb
+elemsnum=0.021846 mln
+48: Elapsed q50: 12.354k ticks
+48: Elapsed q90: 18.28k ticks
+finalSize=1 mb
+elemsnum=0.016385 mln
+64: Elapsed q50: 14.741k ticks
+64: Elapsed q90: 30.57k ticks
+
+finalSize=128 mb
+elemsnum=2.7962 mln
+48: Elapsed q50: 126.641k ticks
+48: Elapsed q90: 138.969k ticks
+finalSize=128 mb
+elemsnum=2.09715 mln
+64: Elapsed q50: 117.419k ticks
+64: Elapsed q90: 134.522k ticks
+finalSize=128 mb
+elemsnum=2.7962 mln
+48: Elapsed q50: 127.124k ticks
+48: Elapsed q90: 141.488k ticks
+finalSize=128 mb
+elemsnum=2.09715 mln
+64: Elapsed q50: 115.604k ticks
+64: Elapsed q90: 130.723k ticks
