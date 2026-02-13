@@ -1,0 +1,22 @@
+construct TMyType 144 global_ns
+construct TMyType 160 in_ns
+construct TMyType 176 in_anon_ns
+construct TMyType 192 in_anon_ns
+construct TMyType 216 in_anon_ns
+start
+call TU1 TMyType 144 global_ns
+call TU1 TMyType 160 in_ns
+call TU1 TMyType 192 in_anon_ns
+construct TMyType 200 in_func
+call TU1 TMyType 200 in_func
+call TU2 TMyType 144 global_ns
+call TU2 TMyType 160 in_ns
+call TU2 TMyType 216 in_anon_ns
+call TU2 TMyType 200 in_func
+finish
+destruct TMyType 200 in_func
+destruct TMyType 216 in_anon_ns
+destruct TMyType 192 in_anon_ns
+destruct TMyType 176 in_anon_ns
+destruct TMyType 160 in_ns
+destruct TMyType 144 global_ns
