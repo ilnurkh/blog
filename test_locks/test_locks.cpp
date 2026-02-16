@@ -20,6 +20,20 @@ struct TBasicElem {
     void UnLock() {}
 };
 
+#ifdef arcadia
+#include <util/system/mutex.h>
+
+struct TUtilMutex {
+    static constexpr std::string_view Name = "arcadia TMutex";
+    TMutex m;
+    uint8_t Data;
+
+    void Lock() {m.lock();}
+    void UnLock() {m.unlock();}
+};
+
+#endif
+
 
 struct TMutexElem {
     static constexpr std::string_view Name = "std::mutex";
@@ -79,6 +93,28 @@ struct TAtomicFlagWaitNotify {
     }
 };
 
+
+struct TAtomicFlagPtrWaitNotify {
+    static constexpr std::string_view Name = "std::atomic<bool> ptr wait + notify";
+    std::unique_ptr<std::atomic<bool>> flag = std::make_unique<std::atomic<bool>>(false);
+    uint8_t Data;
+
+    void Lock() {
+        while(true) {
+            bool expected = false;
+            if (flag->compare_exchange_weak(expected, true, std::memory_order_acquire)) {
+                break;
+            } else {
+                flag->wait(true, std::memory_order_acquire);
+            }
+        }
+    }
+    void UnLock() {
+        flag->store(false, std::memory_order_release);
+        flag->notify_all();
+    }
+};
+
 constexpr size_t AlignmentShift = 1024;
 constexpr size_t CacheLineSize = 64;
 
@@ -130,7 +166,7 @@ struct TDataHolder {
         while(WaitFlag.load()) {}
         size_t actionsDone = 0;
         auto actionsStarted = std::chrono::high_resolution_clock::now();
-        for(size_t index = shift; index < EffectiveEndPtr - EffectiveDataPtr; index += window) {
+        for(size_t index = shift;  int64_t(index) < EffectiveEndPtr - EffectiveDataPtr; index += window) {
             for(size_t j = 0; j < subelems; ++j) {
                 TElem& current = forward ? EffectiveDataPtr[index + j] : EffectiveDataPtr[(EffectiveEndPtr - EffectiveDataPtr) - index - j - 1];
                 current.Lock();
@@ -157,7 +193,50 @@ struct TDataHolder {
     }
 };
 
-int main(int argc, const char* argv[]) {
+int main() {
+    TDataHolder<TAtomicFlagPtrWaitNotify> atomicWaitFlagPtrDataPool(128);
+    {
+        atomicWaitFlagPtrDataPool.DoAction(2, 0, 1, "each second;main thread");
+        WaitFlag = true;
+        std::thread t1([&]() {
+            atomicWaitFlagPtrDataPool.DoAction(2, 0, 1, "each second; t1");
+        });
+        std::thread t2([&]() {
+            atomicWaitFlagPtrDataPool.DoAction(2, 1, 1, "each second; t2");
+        });
+        WaitFlag = false;
+        t1.join();
+        t2.join();
+    }
+    {
+        size_t window_size = CacheLineSize / sizeof(TAtomicFlagPtrWaitNotify) * 2;
+        atomicWaitFlagPtrDataPool.DoAction(window_size, 0, 1, "nonintersected cacheline;main thread");
+        WaitFlag = true;
+        std::thread t1([&]() {
+            atomicWaitFlagPtrDataPool.DoAction(window_size, 0, 1, "nonintersected cacheline; t1");
+        });
+        std::thread t2([&]() {
+            atomicWaitFlagPtrDataPool.DoAction(window_size, window_size / 2, 1, "nonintersected cacheline; t2");
+        });
+        WaitFlag = false;
+        t1.join();
+        t2.join();
+    }
+    {
+        size_t window_size = CacheLineSize / sizeof(TAtomicFlagPtrWaitNotify) * 2;
+        atomicWaitFlagPtrDataPool.DoAction(window_size, 0, 1, "nonintersected cacheline different sides iter;main thread", false);
+        WaitFlag = true;
+        std::thread t1([&]() {
+            atomicWaitFlagPtrDataPool.DoAction(window_size, 0, 1, "nonintersected cacheline different sides iter; t1");
+        });
+        std::thread t2([&]() {
+            atomicWaitFlagPtrDataPool.DoAction(window_size, window_size / 2, 1, "nonintersected cacheline different sides iter; t2", false);
+        });
+        WaitFlag = false;
+        t1.join();
+        t2.join();
+    }
+
     TDataHolder<TAtomicFlagWaitNotify> atomicWaitFlagDataPool(128);
     {
         atomicWaitFlagDataPool.DoAction(2, 0, 1, "each second;main thread");
@@ -272,6 +351,37 @@ int main(int argc, const char* argv[]) {
         t1.join();
         t2.join();
     }
+
+    #ifdef arcadia
+    TDataHolder<TUtilMutex> utilMutexPool(128);
+    {
+        utilMutexPool.DoAction(2, 0, 1, "each second;main thread");
+        WaitFlag = true;
+        std::thread t1([&]() {
+            utilMutexPool.DoAction(2, 0, 1, "each second; t1");
+        });
+        std::thread t2([&]() {
+            utilMutexPool.DoAction(2, 1, 1, "each second; t2");
+        });
+        WaitFlag = false;
+        t1.join();
+        t2.join();
+    }
+    {
+        size_t window_size = CacheLineSize / sizeof(TUtilMutex) * 2;
+        utilMutexPool.DoAction(window_size, 0, 1, "nonintersected cacheline;main thread");
+        WaitFlag = true;
+        std::thread t1([&]() {
+            utilMutexPool.DoAction(window_size, 0, 1, "nonintersected cacheline t1");
+        });
+        std::thread t2([&]() {
+            utilMutexPool.DoAction(window_size, window_size / 2, 1, "nonintersected cacheline t2");
+        });
+        WaitFlag = false;
+        t1.join();
+        t2.join();
+    }
+    #endif
 
 
     TDataHolder<TMutexElem> mutexDataPool(128);

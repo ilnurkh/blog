@@ -1,4 +1,47 @@
 
+init std::atomic<bool> ptr wait + notify
+- sizeof 16
+- alignof 8
+- pool size is 8mb elems 
+- it is 128 mbs capacity 
+std::atomic<bool> ptr wait + notify:each second;main thread
+  window=2(bytes=32) shift=0 (bytes 0) subelems=1 (bytes 16)
+ -- done 4mb actions, in 43.6349mln ticks
+ -- actions cost is 10.4034 ticks
+std::atomic<bool> ptr wait + notify:each second; t2
+  window=2(bytes=32) shift=1 (bytes 16) subelems=1 (bytes 16)
+ -- done 4mb actions, in 167.626mln ticks
+ -- actions cost is 39.9652 ticks
+std::atomic<bool> ptr wait + notify:each second; t1
+  window=2(bytes=32) shift=0 (bytes 0) subelems=1 (bytes 16)
+ -- done 4mb actions, in 169.401mln ticks
+ -- actions cost is 40.3884 ticks
+std::atomic<bool> ptr wait + notify:nonintersected cacheline;main thread
+  window=8(bytes=128) shift=0 (bytes 0) subelems=1 (bytes 16)
+ -- done 1mb actions, in 15.071mln ticks
+ -- actions cost is 14.3728 ticks
+std::atomic<bool> ptr wait + notify:nonintersected cacheline; t2
+  window=8(bytes=128) shift=4 (bytes 64) subelems=1 (bytes 16)
+ -- done 1mb actions, in 44.2655mln ticks
+ -- actions cost is 42.2149 ticks
+std::atomic<bool> ptr wait + notify:nonintersected cacheline; t1
+  window=8(bytes=128) shift=0 (bytes 0) subelems=1 (bytes 16)
+ -- done 1mb actions, in 44.8152mln ticks
+ -- actions cost is 42.7391 ticks
+std::atomic<bool> ptr wait + notify:nonintersected cacheline different sides iter;main thread
+  window=8(bytes=128) shift=0 (bytes 0) subelems=1 (bytes 16)
+ -- done 1mb actions, in 16.0983mln ticks
+ -- actions cost is 15.3525 ticks
+std::atomic<bool> ptr wait + notify:nonintersected cacheline different sides iter; t1
+  window=8(bytes=128) shift=0 (bytes 0) subelems=1 (bytes 16)
+ -- done 1mb actions, in 72.3535mln ticks
+ -- actions cost is 69.0017 ticks
+std::atomic<bool> ptr wait + notify:nonintersected cacheline different sides iter; t2
+  window=8(bytes=128) shift=4 (bytes 64) subelems=1 (bytes 16)
+ -- done 1mb actions, in 73.2714mln ticks
+ -- actions cost is 69.8771 ticks
+
+
 init std::atomic<bool> wait + notify
 - sizeof 2
 - alignof 1
@@ -6,28 +49,40 @@ init std::atomic<bool> wait + notify
 - it is 128 mbs capacity 
 std::atomic<bool> wait + notify:each second;main thread
   window=2(bytes=4) shift=0 (bytes 0) subelems=1 (bytes 2)
- -- done 32mb actions, in 186.722mln ticks
- -- actions cost is 5.56474 ticks
-std::atomic<bool> wait + notify:each second; t2
-  window=2(bytes=4) shift=1 (bytes 2) subelems=1 (bytes 2)
- -- done 32mb actions, in 1407.54mln ticks
- -- actions cost is 41.9479 ticks
+ -- done 32mb actions, in 228.794mln ticks
+ -- actions cost is 6.81861 ticks
 std::atomic<bool> wait + notify:each second; t1
   window=2(bytes=4) shift=0 (bytes 0) subelems=1 (bytes 2)
- -- done 32mb actions, in 1408.02mln ticks
- -- actions cost is 41.9622 ticks
+ -- done 32mb actions, in 1222.99mln ticks
+ -- actions cost is 36.448 ticks
+std::atomic<bool> wait + notify:each second; t2
+  window=2(bytes=4) shift=1 (bytes 2) subelems=1 (bytes 2)
+ -- done 32mb actions, in 1234.3mln ticks
+ -- actions cost is 36.7849 ticks
 std::atomic<bool> wait + notify:nonintersected cacheline;main thread
   window=64(bytes=128) shift=0 (bytes 0) subelems=1 (bytes 2)
- -- done 1mb actions, in 12.9132mln ticks
- -- actions cost is 12.3149 ticks
+ -- done 1mb actions, in 17.1157mln ticks
+ -- actions cost is 16.3228 ticks
 std::atomic<bool> wait + notify:nonintersected cacheline; t2
   window=64(bytes=128) shift=32 (bytes 64) subelems=1 (bytes 2)
- -- done 1mb actions, in 38.9154mln ticks
- -- actions cost is 37.1126 ticks
+ -- done 1mb actions, in 41.6101mln ticks
+ -- actions cost is 39.6825 ticks
 std::atomic<bool> wait + notify:nonintersected cacheline; t1
   window=64(bytes=128) shift=0 (bytes 0) subelems=1 (bytes 2)
- -- done 1mb actions, in 39.0127mln ticks
- -- actions cost is 37.2053 ticks
+ -- done 1mb actions, in 43.279mln ticks
+ -- actions cost is 41.2741 ticks
+std::atomic<bool> wait + notify:nonintersected cacheline different sides iter;main thread
+  window=64(bytes=128) shift=0 (bytes 0) subelems=1 (bytes 2)
+ -- done 1mb actions, in 14.8471mln ticks
+ -- actions cost is 14.1593 ticks
+std::atomic<bool> wait + notify:nonintersected cacheline different sides iter; t2
+  window=64(bytes=128) shift=32 (bytes 64) subelems=1 (bytes 2)
+ -- done 1mb actions, in 38.63mln ticks
+ -- actions cost is 36.8405 ticks
+std::atomic<bool> wait + notify:nonintersected cacheline different sides iter; t1
+  window=64(bytes=128) shift=0 (bytes 0) subelems=1 (bytes 2)
+ -- done 1mb actions, in 38.8441mln ticks
+ -- actions cost is 37.0446 ticks
 
 
 init std::atomic<bool>
@@ -37,28 +92,28 @@ init std::atomic<bool>
 - it is 128 mbs capacity 
 std::atomic<bool>:each second;main thread
   window=2(bytes=4) shift=0 (bytes 0) subelems=1 (bytes 2)
- -- done 32mb actions, in 103.401mln ticks
- -- actions cost is 3.08159 ticks
-std::atomic<bool>:each second; t2
-  window=2(bytes=4) shift=1 (bytes 2) subelems=1 (bytes 2)
- -- done 32mb actions, in 103.035mln ticks
- -- actions cost is 3.07068 ticks
+ -- done 32mb actions, in 102.891mln ticks
+ -- actions cost is 3.06639 ticks
 std::atomic<bool>:each second; t1
   window=2(bytes=4) shift=0 (bytes 0) subelems=1 (bytes 2)
- -- done 32mb actions, in 112.382mln ticks
- -- actions cost is 3.34925 ticks
+ -- done 32mb actions, in 288.798mln ticks
+ -- actions cost is 8.60686 ticks
+std::atomic<bool>:each second; t2
+  window=2(bytes=4) shift=1 (bytes 2) subelems=1 (bytes 2)
+ -- done 32mb actions, in 288.856mln ticks
+ -- actions cost is 8.60858 ticks
 std::atomic<bool>:nonintersected cacheline;main thread
   window=64(bytes=128) shift=0 (bytes 0) subelems=1 (bytes 2)
- -- done 1mb actions, in 25.5409mln ticks
- -- actions cost is 24.3577 ticks
+ -- done 1mb actions, in 10.265mln ticks
+ -- actions cost is 9.78942 ticks
 std::atomic<bool>:nonintersected cacheline; t1
   window=64(bytes=128) shift=0 (bytes 0) subelems=1 (bytes 2)
- -- done 1mb actions, in 12.309mln ticks
- -- actions cost is 11.7387 ticks
+ -- done 1mb actions, in 11.92mln ticks
+ -- actions cost is 11.3678 ticks
 std::atomic<bool>:nonintersected cacheline; t2
   window=64(bytes=128) shift=32 (bytes 64) subelems=1 (bytes 2)
- -- done 1mb actions, in 12.348mln ticks
- -- actions cost is 11.776 ticks
+ -- done 1mb actions, in 19.4475mln ticks
+ -- actions cost is 18.5466 ticks
 
 
 init std::unique_ptr<std::mutex>
@@ -68,28 +123,71 @@ init std::unique_ptr<std::mutex>
 - it is 128 mbs capacity 
 std::unique_ptr<std::mutex>:each second;main thread
   window=2(bytes=32) shift=0 (bytes 0) subelems=1 (bytes 16)
- -- done 4mb actions, in 100.847mln ticks
- -- actions cost is 24.0439 ticks
+ -- done 4mb actions, in 114.382mln ticks
+ -- actions cost is 27.2708 ticks
 std::unique_ptr<std::mutex>:each second; t1
   window=2(bytes=32) shift=0 (bytes 0) subelems=1 (bytes 16)
- -- done 4mb actions, in 115.275mln ticks
- -- actions cost is 27.4838 ticks
+ -- done 4mb actions, in 134.113mln ticks
+ -- actions cost is 31.9751 ticks
 std::unique_ptr<std::mutex>:each second; t2
   window=2(bytes=32) shift=1 (bytes 16) subelems=1 (bytes 16)
- -- done 4mb actions, in 149.133mln ticks
- -- actions cost is 35.5561 ticks
+ -- done 4mb actions, in 160.09mln ticks
+ -- actions cost is 38.1684 ticks
 std::unique_ptr<std::mutex>:nonintersected cacheline;main thread
   window=8(bytes=128) shift=0 (bytes 0) subelems=1 (bytes 16)
- -- done 1mb actions, in 22.2592mln ticks
- -- actions cost is 21.2281 ticks
+ -- done 1mb actions, in 51.5187mln ticks
+ -- actions cost is 49.1321 ticks
 std::unique_ptr<std::mutex>:nonintersected cacheline t1
   window=8(bytes=128) shift=0 (bytes 0) subelems=1 (bytes 16)
- -- done 1mb actions, in 27.5908mln ticks
- -- actions cost is 26.3126 ticks
+ -- done 1mb actions, in 56.8697mln ticks
+ -- actions cost is 54.2352 ticks
 std::unique_ptr<std::mutex>:nonintersected cacheline t2
   window=8(bytes=128) shift=4 (bytes 64) subelems=1 (bytes 16)
- -- done 1mb actions, in 30.6746mln ticks
- -- actions cost is 29.2535 ticks
+ -- done 1mb actions, in 58.0227mln ticks
+ -- actions cost is 55.3347 ticks
+std::unique_ptr<std::mutex>:nonintersected cacheline different sides iter;main thread
+  window=8(bytes=128) shift=0 (bytes 0) subelems=1 (bytes 16)
+ -- done 1mb actions, in 62.6085mln ticks
+ -- actions cost is 59.7081 ticks
+std::unique_ptr<std::mutex>:nonintersected cacheline different sides iter; t1
+  window=8(bytes=128) shift=0 (bytes 0) subelems=1 (bytes 16)
+ -- done 1mb actions, in 56.8654mln ticks
+ -- actions cost is 54.2311 ticks
+std::unique_ptr<std::mutex>:nonintersected cacheline different sides iter; t2
+  window=8(bytes=128) shift=4 (bytes 64) subelems=1 (bytes 16)
+ -- done 1mb actions, in 57.5086mln ticks
+ -- actions cost is 54.8444 ticks
+
+
+init arcadia TMutex
+- sizeof 16
+- alignof 8
+- pool size is 8mb elems 
+- it is 128 mbs capacity 
+arcadia TMutex:each second;main thread
+  window=2(bytes=32) shift=0 (bytes 0) subelems=1 (bytes 16)
+ -- done 4mb actions, in 112.289mln ticks
+ -- actions cost is 26.7717 ticks
+arcadia TMutex:each second; t1
+  window=2(bytes=32) shift=0 (bytes 0) subelems=1 (bytes 16)
+ -- done 4mb actions, in 116.513mln ticks
+ -- actions cost is 27.7789 ticks
+arcadia TMutex:each second; t2
+  window=2(bytes=32) shift=1 (bytes 16) subelems=1 (bytes 16)
+ -- done 4mb actions, in 210.962mln ticks
+ -- actions cost is 50.2973 ticks
+arcadia TMutex:nonintersected cacheline;main thread
+  window=8(bytes=128) shift=0 (bytes 0) subelems=1 (bytes 16)
+ -- done 1mb actions, in 50.819mln ticks
+ -- actions cost is 48.4648 ticks
+arcadia TMutex:nonintersected cacheline t2
+  window=8(bytes=128) shift=4 (bytes 64) subelems=1 (bytes 16)
+ -- done 1mb actions, in 55.5687mln ticks
+ -- actions cost is 52.9944 ticks
+arcadia TMutex:nonintersected cacheline t1
+  window=8(bytes=128) shift=0 (bytes 0) subelems=1 (bytes 16)
+ -- done 1mb actions, in 55.6496mln ticks
+ -- actions cost is 53.0716 ticks
 
 
 init std::mutex
@@ -99,28 +197,40 @@ init std::mutex
 - it is 128 mbs capacity 
 std::mutex:each second;main thread
   window=2(bytes=96) shift=0 (bytes 0) subelems=1 (bytes 48)
- -- done 1.33333mb actions, in 32.457mln ticks
- -- actions cost is 23.2151 ticks
-std::mutex:t1
-  window=2(bytes=96) shift=0 (bytes 0) subelems=1 (bytes 48)
- -- done 1.33333mb actions, in 133.394mln ticks
- -- actions cost is 95.411 ticks
+ -- done 1.33333mb actions, in 26.7789mln ticks
+ -- actions cost is 19.1538 ticks
 std::mutex:t2
   window=2(bytes=96) shift=1 (bytes 48) subelems=1 (bytes 48)
- -- done 1.33333mb actions, in 133.384mln ticks
- -- actions cost is 95.4036 ticks
+ -- done 1.33333mb actions, in 51.5565mln ticks
+ -- actions cost is 36.8761 ticks
+std::mutex:t1
+  window=2(bytes=96) shift=0 (bytes 0) subelems=1 (bytes 48)
+ -- done 1.33333mb actions, in 73.5413mln ticks
+ -- actions cost is 52.6009 ticks
 std::mutex:nonintersected cacheline;main thread
   window=4(bytes=192) shift=0 (bytes 0) subelems=1 (bytes 48)
- -- done 0.666667mb actions, in 9.56446mln ticks
- -- actions cost is 13.6821 ticks
+ -- done 0.666667mb actions, in 16.2107mln ticks
+ -- actions cost is 23.1895 ticks
 std::mutex:nonintersected cacheline t1
   window=4(bytes=192) shift=0 (bytes 0) subelems=1 (bytes 48)
- -- done 0.666667mb actions, in 12.1116mln ticks
- -- actions cost is 17.3257 ticks
+ -- done 0.666667mb actions, in 15.9127mln ticks
+ -- actions cost is 22.7633 ticks
 std::mutex:nonintersected cacheline t2
   window=4(bytes=192) shift=2 (bytes 96) subelems=1 (bytes 48)
- -- done 0.666666mb actions, in 26.8201mln ticks
- -- actions cost is 38.3665 ticks
+ -- done 0.666666mb actions, in 53.2021mln ticks
+ -- actions cost is 76.1062 ticks
+std::mutex:nonintersected cacheline different sides iter;main thread
+  window=4(bytes=192) shift=0 (bytes 0) subelems=1 (bytes 48)
+ -- done 0.666667mb actions, in 37.5186mln ticks
+ -- actions cost is 53.6708 ticks
+std::mutex:nonintersected cacheline different sides iter; t1
+  window=4(bytes=192) shift=0 (bytes 0) subelems=1 (bytes 48)
+ -- done 0.666667mb actions, in 9.40658mln ticks
+ -- actions cost is 13.4562 ticks
+std::mutex:nonintersected cacheline different sides iter; t2
+  window=4(bytes=192) shift=2 (bytes 96) subelems=1 (bytes 48)
+ -- done 0.666666mb actions, in 9.82406mln ticks
+ -- actions cost is 14.0534 ticks
 
 
 init noLock
@@ -130,54 +240,56 @@ init noLock
 - it is 128 mbs capacity 
 noLock:each second;main thread
   window=2(bytes=2) shift=0 (bytes 0) subelems=1 (bytes 1)
- -- done 64mb actions, in 77.5658mln ticks
- -- actions cost is 1.15582 ticks
+ -- done 64mb actions, in 70.6082mln ticks
+ -- actions cost is 1.05214 ticks
 noLock:t2
   window=2(bytes=2) shift=1 (bytes 1) subelems=1 (bytes 1)
- -- done 64mb actions, in 81.4245mln ticks
- -- actions cost is 1.21332 ticks
+ -- done 64mb actions, in 66.7483mln ticks
+ -- actions cost is 0.994627 ticks
 noLock:t1
   window=2(bytes=2) shift=0 (bytes 0) subelems=1 (bytes 1)
- -- done 64mb actions, in 81.4647mln ticks
- -- actions cost is 1.21392 ticks
+ -- done 64mb actions, in 67.1011mln ticks
+ -- actions cost is 0.999885 ticks
 noLock:nonintersected cacheline; main thread
   window=64(bytes=64) shift=0 (bytes 0) subelems=1 (bytes 1)
- -- done 2mb actions, in 18.806mln ticks
- -- actions cost is 8.96741 ticks
+ -- done 2mb actions, in 14.6164mln ticks
+ -- actions cost is 6.96963 ticks
 noLock:nonintersected cacheline t1
   window=64(bytes=64) shift=0 (bytes 0) subelems=1 (bytes 1)
- -- done 2mb actions, in 29.8917mln ticks
- -- actions cost is 14.2535 ticks
+ -- done 2mb actions, in 31.9353mln ticks
+ -- actions cost is 15.2279 ticks
 noLock:nonintersected cacheline t2
   window=64(bytes=64) shift=1 (bytes 1) subelems=1 (bytes 1)
- -- done 2mb actions, in 29.8714mln ticks
- -- actions cost is 14.2438 ticks
+ -- done 2mb actions, in 31.9262mln ticks
+ -- actions cost is 15.2236 ticks
 noLock:32 in each 64; main thread
   window=64(bytes=64) shift=0 (bytes 0) subelems=32 (bytes 32)
- -- done 64mb actions, in 25.3756mln ticks
- -- actions cost is 0.378126 ticks
-noLock:t2
-  window=64(bytes=64) shift=32 (bytes 32) subelems=32 (bytes 32)
- -- done 64mb actions, in 28.4049mln ticks
- -- actions cost is 0.423265 ticks
+ -- done 64mb actions, in 19.2936mln ticks
+ -- actions cost is 0.287497 ticks
 noLock:t1
   window=64(bytes=64) shift=0 (bytes 0) subelems=32 (bytes 32)
- -- done 64mb actions, in 28.4381mln ticks
- -- actions cost is 0.423761 ticks
+ -- done 64mb actions, in 34.7222mln ticks
+ -- actions cost is 0.517401 ticks
+noLock:t2
+  window=64(bytes=64) shift=32 (bytes 32) subelems=32 (bytes 32)
+ -- done 64mb actions, in 34.6651mln ticks
+ -- actions cost is 0.51655 ticks
 noLock:64 in each 128; main thread
   window=128(bytes=128) shift=0 (bytes 0) subelems=64 (bytes 64)
- -- done 64.0001mb actions, in 12.5762mln ticks
- -- actions cost is 0.1874 ticks
+ -- done 64mb actions, in 11.4044mln ticks
+ -- actions cost is 0.169939 ticks
 noLock:t1
   window=128(bytes=128) shift=0 (bytes 0) subelems=64 (bytes 64)
- -- done 64.0001mb actions, in 13.6509mln ticks
- -- actions cost is 0.203414 ticks
+ -- done 64mb actions, in 16.8232mln ticks
+ -- actions cost is 0.250685 ticks
 noLock:t2
   window=128(bytes=128) shift=64 (bytes 64) subelems=64 (bytes 64)
- -- done 64mb actions, in 13.3506mln ticks
- -- actions cost is 0.19894 ticks
-checksum 4968218665
-checksum 221755215
-checksum 690676340
-checksum 5699839135
-checksum 5699839135
+ -- done 64mb actions, in 18.4282mln ticks
+ -- actions cost is 0.274602 ticks
+checksum 4968218208
+checksum 152993743
+checksum 690676171
+checksum 656925115
+checksum 5699837995
+checksum 5666135179
+checksum 656925115
