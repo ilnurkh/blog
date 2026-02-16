@@ -1,5 +1,5 @@
-this code is used in publication: TODO
-publication content: https://t.me/server_started/29
+this code is used in publication: https://habr.com/ru/articles/1000192/  https://t.me/server_started/29
+publication content: 
 
 Продолжаем цикл #память - это сложно
 
