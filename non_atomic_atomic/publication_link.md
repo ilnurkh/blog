@@ -1,4 +1,5 @@
-this code is used in publication: TODO
+this code is used in [publication](https://t.me/server_started/30)
+
 publication content: 
 
 Давайте обманем атомик. Вот две функции - можно ли используя только их увидеть некорректное состояние атомика?
