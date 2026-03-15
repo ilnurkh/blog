@@ -66,10 +66,26 @@ struct TGetMaxLoadFactor<THashMap<K, V>> {
 template<class T>
 T RefillReserved2(const T& x) {
     T res;
-    res.reserve(x.bucket_count() * TGetMaxLoadFactor<std::remove_cvref_t<decltype(x)>>::Get(x));
+    // res.reserve(x.bucket_count() * TGetMaxLoadFactor<std::remove_cvref_t<decltype(x)>>::Get(x));
+    res.rehash(x.bucket_count());
     std::cout << "--- reserved to " << res.bucket_count() << std::endl;
     for(auto& p : x) {
         res[p.first] = p.second;
+    }
+    return res;
+}
+
+template<class T>
+T Rehash(const T& x, size_t n, bool back) {
+    T res = x;
+    if (n >= 1) {
+        res.rehash(x.bucket_count() * 2);
+    }
+    if (n >= 2) {
+        res.rehash(x.bucket_count() * 3);
+    }
+    if (back) {
+        res.rehash(x.bucket_count());
     }
     return res;
 }
@@ -149,6 +165,37 @@ void DoExp(std::string name) {
         T reservedRefillRefill = RefillReserved2(RefillReserved2(data));
         std::cout << name << " - reservedRefillRefill MissOrders " << CalcMissOrders(reservedRefillRefill) << std::endl;
         std::cout << name << " -- bucket count " << data.bucket_count() << " -> " << reservedRefillRefill.bucket_count() << std::endl;
+    }
+
+    {
+        T rehashRefill = Rehash(data, 0 , false);
+        std::cout << name << " - rehash 0-0 MissOrders " << CalcMissOrders(rehashRefill) << std::endl;
+        std::cout << name << " -- bucket count " << data.bucket_count() << " -> " << rehashRefill.bucket_count() << std::endl;
+    }
+    {
+        T rehashRefill = Rehash(data, 0 , true);
+        std::cout << name << " - rehash 0-1 MissOrders " << CalcMissOrders(rehashRefill) << std::endl;
+        std::cout << name << " -- bucket count " << data.bucket_count() << " -> " << rehashRefill.bucket_count() << std::endl;
+    }
+    {
+        T rehashRefill = Rehash(data, 1 , false);
+        std::cout << name << " - rehash 1-0 MissOrders " << CalcMissOrders(rehashRefill) << std::endl;
+        std::cout << name << " -- bucket count " << data.bucket_count() << " -> " << rehashRefill.bucket_count() << std::endl;
+    }
+    {
+        T rehashRefill = Rehash(data, 1 , true);
+        std::cout << name << " - rehash 1-1 MissOrders " << CalcMissOrders(rehashRefill) << std::endl;
+        std::cout << name << " -- bucket count " << data.bucket_count() << " -> " << rehashRefill.bucket_count() << std::endl;
+    }
+    {
+        T rehashRefill = Rehash(data, 2 , false);
+        std::cout << name << " - rehash 2-0 MissOrders " << CalcMissOrders(rehashRefill) << std::endl;
+        std::cout << name << " -- bucket count " << data.bucket_count() << " -> " << rehashRefill.bucket_count() << std::endl;
+    }
+    {
+        T rehashRefill = Rehash(data, 2 , true);
+        std::cout << name << " - rehash 2-1 MissOrders " << CalcMissOrders(rehashRefill) << std::endl;
+        std::cout << name << " -- bucket count " << data.bucket_count() << " -> " << rehashRefill.bucket_count() << std::endl;
     }
 
 }

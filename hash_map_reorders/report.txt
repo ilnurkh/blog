@@ -13,3 +13,15 @@ unordered_map -- bucket count 172933 -> 172933
 --- reserved to 172933
 unordered_map - reservedRefillRefill MissOrders 0
 unordered_map -- bucket count 172933 -> 172933
+unordered_map - rehash 0-0 MissOrders 0
+unordered_map -- bucket count 172933 -> 172933
+unordered_map - rehash 0-1 MissOrders 0
+unordered_map -- bucket count 172933 -> 172933
+unordered_map - rehash 1-0 MissOrders 88250
+unordered_map -- bucket count 172933 -> 351061
+unordered_map - rehash 1-1 MissOrders 9650
+unordered_map -- bucket count 172933 -> 172933
+unordered_map - rehash 2-0 MissOrders 18199
+unordered_map -- bucket count 172933 -> 520241
+unordered_map - rehash 2-1 MissOrders 80367
+unordered_map -- bucket count 172933 -> 172933
