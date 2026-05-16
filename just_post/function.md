@@ -156,3 +156,60 @@ MakeActionLambda():
         mov     rdi, rax
         call    __clang_call_terminate
 ```
+
+
+--------
+
+Небольшое дополнение к предыдущему посту: посмотрим как себя компилятор ведёт с интерфейсами.
+
+Объявим интерфейс, объявим его реализацию, которая умеет взять лямбду и форварднуть её, ну и тип MakeAction сменим
+```
+struct ICallable {
+    virtual ~ICallable() {}
+    virtual int operator()() = 0;
+};
+
+template<class F>
+struct TLambdaCallable : public ICallable {
+    F Functor;
+    TLambdaCallable(F&& f) : Functor(std::move(f))
+    {}
+    int operator()() final {
+        return Functor();
+    }
+};
+
+
+int MakeAction(ICallable&& f) {
+    MarkerStart();
+    int x = f();
+    MarkerEnd();
+    return x;
+}
+```
+
+Примерно любые варианты определений (кстати, спасибо выводу шаблонных параметров классов из конструктора - выглядит это компактно)
+```
+void MakeActionFunc() {
+    MakeAction(TLambdaCallable{&MarkerInnerAction});
+}
+
+void MakeActionLambda() {
+    MakeAction(TLambdaCallable{[](){return MarkerInnerAction();}});
+}
+```
+
+Компилятор оптимизирует в одинаковый результат - без всяких лишних действий, и никакого влияния `noexcept` тоже нет - хорошо и с ним и, без него. Видимо, стоит констатировать, что интерфейсы более понятная компилятору штука, чем std::function.
+
+```
+MakeActionLambda():
+        push    rax
+        call    MarkerStart()@PLT
+        call    MarkerInnerAction()@PLT
+        pop     rax
+        jmp     MarkerEnd()@PLT
+```
+
+https://godbolt.org/z/GPnYcKEMc
+
+--------------
