@@ -1,3 +1,4 @@
+#include <cassert>
 #include <cstdlib>
 #include <utility>
 #include <vector>
@@ -13,11 +14,13 @@ struct TComparator {
         // int64_t bpos = &b - ptrsToSort.data();
         // std::cerr << "cmp " << *a << " vs " << *b << std::endl;
         if (*a < 0) {
+            assert(*a >= 0);
             std::cerr << "mode = " << mode << std::endl;
             std::cerr << "out of range deref a=" << *a  << std::endl;
             exit(1);
         }
         if (*b < 0) {
+            assert(*b >= 0);
             std::cerr << "mode = " << mode << std::endl;
             std::cerr << "out of range deref b=" << *b << std::endl;
             exit(1);
@@ -45,7 +48,7 @@ struct TComparator {
     }
 };
 
-constexpr size_t LEN = 100;
+constexpr size_t LEN = 4;
 int main(int argc, const char* argv[]) {
     TComparator comp;
     if (argc > 1 && argv[1]) {
